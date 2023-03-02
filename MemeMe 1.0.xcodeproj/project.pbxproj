@@ -13,6 +13,7 @@
 		701788DA29ABEBE900BB9776 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 701788D829ABEBE900BB9776 /* Main.storyboard */; };
 		701788DC29ABEBEB00BB9776 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 701788DB29ABEBEB00BB9776 /* Assets.xcassets */; };
 		701788DF29ABEBEB00BB9776 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 701788DD29ABEBEB00BB9776 /* LaunchScreen.storyboard */; };
+		701788E729AE98A300BB9776 /* Meme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701788E629AE98A300BB9776 /* Meme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		701788DB29ABEBEB00BB9776 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		701788DE29ABEBEB00BB9776 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		701788E029ABEBEB00BB9776 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		701788E629AE98A300BB9776 /* Meme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				701788D229ABEBE900BB9776 /* AppDelegate.swift */,
 				701788D429ABEBE900BB9776 /* SceneDelegate.swift */,
 				701788D629ABEBE900BB9776 /* ViewController.swift */,
+				701788E629AE98A300BB9776 /* Meme.swift */,
 				701788D829ABEBE900BB9776 /* Main.storyboard */,
 				701788DB29ABEBEB00BB9776 /* Assets.xcassets */,
 				701788DD29ABEBEB00BB9776 /* LaunchScreen.storyboard */,
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				701788D729ABEBE900BB9776 /* ViewController.swift in Sources */,
+				701788E729AE98A300BB9776 /* Meme.swift in Sources */,
 				701788D329ABEBE900BB9776 /* AppDelegate.swift in Sources */,
 				701788D529ABEBE900BB9776 /* SceneDelegate.swift in Sources */,
 			);

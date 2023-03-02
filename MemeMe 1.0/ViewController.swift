@@ -7,13 +7,184 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate, UITextFieldDelegate{
 
+    @IBOutlet weak var topTextField: UITextField!
+    @IBOutlet weak var bottomTextField: UITextField!
+    @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var pickedImage: UIImageView!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
+    @IBOutlet weak var topNavigationBar: UINavigationBar!
+    @IBOutlet weak var bottomNavigationBar: UINavigationBar!
+    @IBOutlet weak var cancelButton: UIBarButtonItem!
+    let picker = UIImagePickerController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        topTextField.textAlignment = .center
+        bottomTextField.textAlignment = .center
+        topTextField.delegate = self
+        bottomTextField.delegate = self
+        topTextField.defaultTextAttributes = memeTextAttributes
+        bottomTextField.defaultTextAttributes = memeTextAttributes
+        configureUI()
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera){
+            cameraButton.isEnabled = true
+        }
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        subscribeToKeyboardNotifications()
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        unsubscribeFromKeyboardNotifications()
+    }
 
-
+    @IBAction func pickImageFromCamera(_ sender: UIButton) {
+        
+        // I think , it may not be a necessary to control camera is available twice. Since we disable uibutton if it isnt available. But extra security wont harm, i guess...
+        
+        
+        if UIImagePickerController.isSourceTypeAvailable(.camera){
+            picker.sourceType = .camera
+            picker.allowsEditing = true
+            picker.delegate = self
+            present(picker, animated: true)
+        }
+  
+    }
+    
+    
+    @IBAction func pickImageFromGallery(_ sender: UIButton) {
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
+            picker.sourceType = .photoLibrary
+            picker.allowsEditing = true
+            picker.delegate = self
+            present(picker, animated: true)
+        }
+        
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[.editedImage] as? UIImage else {return}
+        pickedImage.image = image
+        dismiss(animated: true)
+        shareButton.isEnabled = true
+        cancelButton.isEnabled = true
+    }
+    
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true)
+    }
+    // This makes textfields blank when user taps them.
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.text = ""
+    }
+    
+    // This makes keyboard get lost when we press return.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    
+    // I think there is a problem here. If user taps top and then bottom textfield, screen shifts up or vice versa. But i don't know how to solve this right now. Maybe adding a delay to keyboardWillHide can solve this.
+    
+    func subscribeToKeyboardNotifications(){
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_: )), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func unsubscribeFromKeyboardNotifications(){
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    
+    
+    @objc func keyboardWillShow(_ notification:Notification){
+        view.frame.origin.y -= getKeyBoardHeight(notification)
+    }
+    
+    func getKeyBoardHeight(_ notification: Notification) -> CGFloat{
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
+        return keyboardSize.cgRectValue.height
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification){
+        print("keyboardWillHide")
+        view.frame.origin.y += getKeyBoardHeight(notification)
+    }
+    
+    
+    @IBAction func cancelMeme(_ sender: UIBarButtonItem) {
+        //go back to initial state.
+        print("go back to initial state")
+        configureUI()
+        
+    }
+    
+    
+    @IBAction func shareMeme(_ sender: UIBarButtonItem) {
+        let meme = save()
+        let ac = UIActivityViewController(activityItems: [meme], applicationActivities: nil)
+        
+        present(ac, animated: true)
+        //since i can't share the meme by using simulator, i can't controll if it works.
+        
+        
+        
+    }
+    
+    func save()->Meme{
+        let memedImage = generateMemedImage()
+        return Meme(topText: topTextField.text, bottomText: bottomTextField.text, originalImage: pickedImage.image, editedImage: memedImage)
+        
+    }
+    
+    func generateMemedImage() -> UIImage{
+        // hide navigation bars before taking photo.
+        topNavigationBar.isHidden = true
+        bottomNavigationBar.isHidden = true
+        
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        let memedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        // navigation bars are not hidden anymore!
+        topNavigationBar.isHidden = false
+        bottomNavigationBar.isHidden = false
+        
+        return memedImage
+    }
+    
+    
+    // textfield text attributes.
+    
+    let memeTextAttributes: [NSAttributedString.Key: Any] = [
+        NSAttributedString.Key.strokeColor: UIColor.black,
+        NSAttributedString.Key.foregroundColor: UIColor.white,
+        NSAttributedString.Key.font: UIFont(name:"HelveticaNeue-CondensedBlack", size:40)!,
+        NSAttributedString.Key.strokeWidth: NSNumber(3)
+        
+    ]
+    
+    // this function configures uibuttons.
+    func configureUI(){
+        pickedImage.image = nil
+        topTextField.text = "TOP"
+        bottomTextField.text = "BOTTOM"
+        cancelButton.isEnabled = false
+        shareButton.isEnabled = false    }
+    
 }
 
