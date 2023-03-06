@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate, UITextFieldDelegate{
+class MemeEditorViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate, UITextFieldDelegate{
 
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var bottomTextField: UITextField!
@@ -21,17 +21,21 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        topTextField.textAlignment = .center
-        bottomTextField.textAlignment = .center
+        
+        
         topTextField.delegate = self
         bottomTextField.delegate = self
-        topTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.defaultTextAttributes = memeTextAttributes
+        prepareTextField(topTextField,defaultText: "TOP")
+        prepareTextField(bottomTextField,defaultText: "BOTTOM")
         configureUI()
         
-        if UIImagePickerController.isSourceTypeAvailable(.camera){
-            cameraButton.isEnabled = true
-        }
+        
+        
+        #if targetEnvironment(simulator)
+        cameraButton.isEnabled = false
+        #else
+        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        #endif
         // Do any additional setup after loading the view.
     }
     
@@ -51,25 +55,26 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigat
         // I think , it may not be a necessary to control camera is available twice. Since we disable uibutton if it isnt available. But extra security wont harm, i guess...
         
         
-        if UIImagePickerController.isSourceTypeAvailable(.camera){
-            picker.sourceType = .camera
-            picker.allowsEditing = true
-            picker.delegate = self
-            present(picker, animated: true)
-        }
+        pickImage(UIImagePickerController.SourceType.camera)
   
     }
     
     
     @IBAction func pickImageFromGallery(_ sender: UIButton) {
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
-            picker.sourceType = .photoLibrary
-            picker.allowsEditing = true
-            picker.delegate = self
-            present(picker, animated: true)
-        }
+//
+        pickImage(UIImagePickerController.SourceType.photoLibrary)
         
     }
+    
+    
+    func pickImage(_ sourceType: UIImagePickerController.SourceType){
+        picker.sourceType = sourceType
+        picker.allowsEditing = true
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.editedImage] as? UIImage else {return}
@@ -110,7 +115,10 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigat
     
     
     @objc func keyboardWillShow(_ notification:Notification){
-        view.frame.origin.y -= getKeyBoardHeight(notification)
+        if bottomTextField.isFirstResponder{
+            view.frame.origin.y = -getKeyBoardHeight(notification)
+        }
+        
     }
     
     func getKeyBoardHeight(_ notification: Notification) -> CGFloat{
@@ -120,14 +128,13 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigat
     }
     
     @objc func keyboardWillHide(_ notification: Notification){
-        print("keyboardWillHide")
-        view.frame.origin.y += getKeyBoardHeight(notification)
+        
+        view.frame.origin.y = 0
     }
     
     
     @IBAction func cancelMeme(_ sender: UIBarButtonItem) {
         //go back to initial state.
-        print("go back to initial state")
         configureUI()
         
     }
@@ -135,9 +142,16 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigat
     
     @IBAction func shareMeme(_ sender: UIBarButtonItem) {
         let meme = save()
-        let ac = UIActivityViewController(activityItems: [meme], applicationActivities: nil)
+        let ac = UIActivityViewController(activityItems: [meme.editedImage], applicationActivities: [])
         
+        ac.completionWithItemsHandler = {(activity, completed, items, error) in
+                 if (completed) {
+                     self.save()
+                 }
+        }
         present(ac, animated: true)
+        
+        
         //since i can't share the meme by using simulator, i can't controll if it works.
         
         
@@ -174,17 +188,21 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigat
         NSAttributedString.Key.strokeColor: UIColor.black,
         NSAttributedString.Key.foregroundColor: UIColor.white,
         NSAttributedString.Key.font: UIFont(name:"HelveticaNeue-CondensedBlack", size:40)!,
-        NSAttributedString.Key.strokeWidth: NSNumber(3)
+        NSAttributedString.Key.strokeWidth: NSNumber(-3.5)
         
     ]
     
     // this function configures uibuttons.
     func configureUI(){
         pickedImage.image = nil
-        topTextField.text = "TOP"
-        bottomTextField.text = "BOTTOM"
         cancelButton.isEnabled = false
         shareButton.isEnabled = false    }
+    
+    func prepareTextField(_ textField:UITextField, defaultText:String){
+        textField.textAlignment = .center
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.text = defaultText
+    }
     
 }
 
