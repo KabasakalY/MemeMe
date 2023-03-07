@@ -65,22 +65,30 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Text" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="9Gz-9G-xR9">
-                                <rect key="frame" x="182.66666666666666" y="175" width="28" height="17"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Text" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="oG2-fR-MOr">
-                                <rect key="frame" x="182" y="677" width="28" height="17"/>
+                                <rect key="frame" x="16" y="671" width="361" height="53"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="53" id="11q-11-dMv"/>
+                                    <constraint firstAttribute="width" constant="361" id="3Fj-4K-nN8"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Text" textAlignment="center" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="9Gz-9G-xR9">
+                                <rect key="frame" x="16" y="153" width="361" height="53"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="361" id="3Cf-Hq-kvy"/>
+                                    <constraint firstAttribute="height" constant="53" id="hlk-Ma-aSA"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters"/>
                             </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="9MN-ow-Smu" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="18c-SC-xLV"/>
-                            <constraint firstItem="wx1-zL-JRI" firstAttribute="top" secondItem="oG2-fR-MOr" secondAttribute="bottom" constant="80" id="5jd-Pm-WHj"/>
+                            <constraint firstItem="wx1-zL-JRI" firstAttribute="top" secondItem="oG2-fR-MOr" secondAttribute="bottom" constant="50" id="5jd-Pm-WHj"/>
                             <constraint firstItem="wx1-zL-JRI" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="6q5-cr-YTt"/>
                             <constraint firstItem="9MN-ow-Smu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="K2O-HI-yEJ"/>
                             <constraint firstItem="wx1-zL-JRI" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Mhm-7S-tQ7"/>
@@ -88,7 +96,7 @@
                             <constraint firstItem="9MN-ow-Smu" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="QY6-nM-BsK"/>
                             <constraint firstItem="w9Y-oR-6cH" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Ynr-tj-bkh"/>
                             <constraint firstItem="w9Y-oR-6cH" firstAttribute="top" secondItem="9MN-ow-Smu" secondAttribute="bottom" id="ZBT-Pr-umz"/>
-                            <constraint firstItem="9Gz-9G-xR9" firstAttribute="top" secondItem="9MN-ow-Smu" secondAttribute="bottom" constant="72" id="em7-qM-h0a"/>
+                            <constraint firstItem="9Gz-9G-xR9" firstAttribute="top" secondItem="9MN-ow-Smu" secondAttribute="bottom" constant="50" id="em7-qM-h0a"/>
                             <constraint firstItem="wx1-zL-JRI" firstAttribute="top" secondItem="w9Y-oR-6cH" secondAttribute="bottom" id="gf5-Tg-8xj"/>
                             <constraint firstItem="w9Y-oR-6cH" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="j3C-U9-FkR"/>
                             <constraint firstItem="wx1-zL-JRI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="jNK-v1-11X"/>

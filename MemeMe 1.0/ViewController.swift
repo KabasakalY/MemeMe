@@ -199,9 +199,10 @@ class MemeEditorViewController: UIViewController,UIImagePickerControllerDelegate
         shareButton.isEnabled = false    }
     
     func prepareTextField(_ textField:UITextField, defaultText:String){
-        textField.textAlignment = .center
+        
         textField.defaultTextAttributes = memeTextAttributes
         textField.text = defaultText
+        textField.textAlignment = .center
     }
     
 }
